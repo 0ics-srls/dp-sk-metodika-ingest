@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.dataplatform.0ics.ai/sk-metodika/plan/1.json",
+  "title": "sk-metodika plan file (one per item), written by dp-sk-metodika-convert and read by dp-sk-metodika-ingest",
+  "type": "object",
+  "required": ["planVersion", "itemId", "fonte", "documents", "skipped", "coverage", "warnings"],
+  "additionalProperties": false,
+  "properties": {
+    "planVersion": { "const": 1 },
+    "itemId": { "type": "string", "minLength": 1 },
+    "fonte": { "enum": ["financnasprava", "mfsr-spravodajca", "nbs-metodicke", "uvo-metodicke"] },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fonte", "source_id", "legacy_doc_id", "ente", "tipo", "section", "group_label", "numero", "number", "dept", "anno", "data", "oggetto",
+          "text_raw", "text_source", "source_url", "pdf_bytes", "pdf_pages", "pdf_created"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "fonte": { "enum": ["financnasprava", "mfsr-spravodajca", "nbs-metodicke", "uvo-metodicke"] },
+          "source_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "legacy_doc_id": { "type": ["string", "null"] },
+          "ente": { "type": "string", "minLength": 1 },
+          "tipo": { "type": "string", "minLength": 1 },
+          "section": { "type": ["string", "null"] },
+          "group_label": { "type": ["string", "null"] },
+          "numero": { "type": ["string", "null"] },
+          "number": { "type": ["integer", "null"] },
+          "dept": { "type": ["string", "null"] },
+          "anno": { "type": ["integer", "null"], "minimum": 1900, "maximum": 2200 },
+          "data": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+          "oggetto": { "type": ["string", "null"] },
+          "text_raw": { "type": "string", "pattern": "\\S" },
+          "text_source": { "enum": ["pdf", "ocr"] },
+          "source_url": { "type": ["string", "null"] },
+          "pdf_bytes": { "type": ["integer", "null"], "minimum": 0 },
+          "pdf_pages": { "type": ["integer", "null"], "minimum": 0 },
+          "pdf_created": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+        }
+      }
+    },
+    "skipped": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fonte", "item_ref", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "fonte": { "enum": ["financnasprava", "mfsr-spravodajca", "nbs-metodicke", "uvo-metodicke"] },
+          "item_ref": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["fonte", "item_id", "listed", "taken", "skipped", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "fonte": { "enum": ["financnasprava", "mfsr-spravodajca", "nbs-metodicke", "uvo-metodicke"] },
+        "item_id": { "type": "string", "minLength": 1 },
+        "listed": { "type": "integer", "minimum": 0 },
+        "taken": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 },
+        "note": { "type": ["string", "null"] }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  }
+}
